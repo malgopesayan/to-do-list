@@ -103,6 +103,7 @@ body {
   li button:hover {
     background-color: #2980b9;
   }
+
 .edit-btn {
   background-color: #27ae60;
 }
@@ -118,4 +119,3 @@ body {
 .save-btn:hover {
   background-color: #d35400;
 }
-  
