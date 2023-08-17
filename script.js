@@ -1,6 +1,7 @@
 const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
 const taskList = document.getElementById("taskList");
+const noTaskMessage = document.getElementById("noTaskMessage");
 
 addTaskBtn.addEventListener("click", addTask);
 
@@ -8,19 +9,32 @@ function addTask() {
   const taskText = taskInput.value.trim();
   if (taskText !== "") {
     const taskItem = document.createElement("li");
-    taskItem.innerText = taskText;
+    taskItem.innerHTML = `
+      <span class="task-text">${taskText}</span>
+      <button class="edit-btn">Edit</button>
+      <button class="delete-btn">Delete</button>
+    `;
 
-    const deleteButton = document.createElement("button");
-    deleteButton.innerText = "Delete";
-    deleteButton.addEventListener("click", () => {
-      taskItem.remove();
-    });
-
-    taskItem.appendChild(deleteButton);
     taskList.appendChild(taskItem);
+    noTaskMessage.style.display = "none";
 
     taskInput.value = "";
+    attachTaskButtonsEventListeners(taskItem);
   }
+}
+
+function attachTaskButtonsEventListeners(taskItem) {
+  const editButton = taskItem.querySelector(".edit-btn");
+  const deleteButton = taskItem.querySelector(".delete-btn");
+
+  editButton.addEventListener("click", () => {
+    editTask(taskItem, editButton);
+  });
+
+  deleteButton.addEventListener("click", () => {
+    taskItem.remove();
+    checkNoTasks();
+  });
 }
 
 function editTask(taskItem, editButton) {
@@ -52,6 +66,13 @@ function saveTask(taskItem, editInput, saveButton) {
   saveButton.classList.add("edit-btn");
 
   saveButton.removeEventListener("click", saveTask);
-  saveButton.addEventListener("click", handleEdit);
+  saveButton.addEventListener("click", function() {
+    editTask(taskItem, saveButton);
+  });
 }
 
+function checkNoTasks() {
+  if (taskList.children.length === 0) {
+    noTaskMessage.style.display = "block";
+  }
+}
